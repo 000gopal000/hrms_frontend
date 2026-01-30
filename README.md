@@ -1,9 +1,9 @@
 # HRMS Lite - Frontend UI
  
-## 💻 Project Overview
+##  Project Overview
 HRMS Lite Frontend is a modern, responsive Single Page Application (SPA) built with **React** and **Vite**. It provides a professional, enterprise-grade interface for HR administrators to manage employees and track daily attendance efficiently.
  
-## ✨ Key Features
+##  Key Features
 - **Dashboard**: Real-time overview of total employees, departments, and daily attendance statistics.
 - **Employee Management**:
   - Add, Edit, and Delete employee records.
@@ -16,7 +16,7 @@ HRMS Lite Frontend is a modern, responsive Single Page Application (SPA) built w
 - **Responsive Design**: Fully responsive layout optimized for desktop and tablet usage.
 - **Enterprise UI**: Custom CSS design system using an "Enterprise Dark/Slate" theme.
  
-## 🚀 Tech Stack
+##  Tech Stack
 - **Core**: React 18, Vite
 - **Styling**: Vanilla CSS (CSS Modules approach with global variables)
 - **Icons**: Lucide React
@@ -24,7 +24,7 @@ HRMS Lite Frontend is a modern, responsive Single Page Application (SPA) built w
 - **HTTP Client**: Axios
 - **Routing**: React Router DOM
  
-## 📂 Project Structure
+##  Project Structure
 ```
 hrms_frontend/
 ├── src/
@@ -39,7 +39,7 @@ hrms_frontend/
 └── package.json        # Dependencies and scripts
 ```
  
-## 🛠️ Setup & Installation
+##  Setup & Installation
  
 ### Prerequisites
 - Node.js 16+
@@ -58,16 +58,16 @@ npm install
 ### 3. Environment Configuration
 Create a `.env` file in the root if you need to point to a custom backend URL (Default is localhost:8000):
 ```env
-VITE_API_URL=http://localhost:8000/api
+VITE_API_URL= https://ethara-ai-backend-production.up.railway.app/api
 ```
  
 ### 4. Run Development Server
 ```bash
 npm run dev
 ```
-The application will be accessible at `http://localhost:5173`.
+The application will be accessible at `https://etharaaihrms.netlify.app/`.
  
-## 🐳 Docker Deployment
+## Docker Deployment
 The frontend uses a multi-stage Docker build to compile the React app and serve it via Nginx.
  
 ```bash
@@ -75,7 +75,7 @@ docker build -t hrms-frontend .
 docker run -p 3000:80 hrms-frontend
 ```
  
-## 🎨 Design System
+##  Design System
 The project uses a centralized CSS variable system defined in `index.css`:
 - **Typography**: Inter (Google Fonts)
 - **Colors**: Slate (Primary), Blue (Accent), Red/Green (Status)
