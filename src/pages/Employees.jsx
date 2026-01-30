@@ -117,7 +117,7 @@ const Employees = () => {
                 </div>
             )}
 
-            <div className="table-wrapper" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 300px)', overflow: 'hidden' }}>
+            <div className="table-wrapper" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 100px)', overflow: 'hidden' }}>
                 <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
                     <Search size={14} color="var(--text-tertiary)" />
                     <input
