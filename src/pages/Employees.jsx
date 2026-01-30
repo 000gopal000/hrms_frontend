@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import api from '../api';
 import { Trash2, UserPlus, Users, Search, Filter } from 'lucide-react';
 import toast from 'react-hot-toast';
+import TableLoader from '../components/TableLoader';
 
 const Employees = () => {
     const [employees, setEmployees] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
     const [formData, setFormData] = useState({
         employee_id: '',
         full_name: '',
@@ -20,11 +22,14 @@ const Employees = () => {
 
     const fetchEmployees = async () => {
         try {
+            setIsLoading(true);
             const res = await api.get('/employees/');
             setEmployees(res.data);
         } catch (error) {
             console.error(error);
             toast.error("Failed to load data");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -134,35 +139,41 @@ const Employees = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {filtered.map(emp => (
-                                <tr key={emp.employee_id}>
-                                    <td className="col-id">{emp.employee_id}</td>
-                                    <td>
-                                        <div className="user-cell">
-                                            <div className="table-avatar">
-                                                {emp.full_name.substring(0, 2).toUpperCase()}
-                                            </div>
-                                            <div>
-                                                <div className="col-primary">{emp.full_name}</div>
-                                                <div className="col-secondary">{emp.email}</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><span className="badge badge-neutral">{emp.department}</span></td>
-                                    <td>
-                                        <span style={{ fontSize: '0.875rem', fontWeight: 500, color: '#059669' }}>
-                                            {emp.attendance_records?.filter(a => a.status === 'Present').length || 0} Days
-                                        </span>
-                                    </td>
-                                    <td style={{ textAlign: 'center' }}>
-                                        <button className="btn-icon" onClick={() => handleDelete(emp.employee_id)} title="Delete">
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                            {filtered.length === 0 && (
-                                <tr><td colSpan="5" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-tertiary)' }}>No records found.</td></tr>
+                            {isLoading ? (
+                                <TableLoader columns={5} />
+                            ) : (
+                                <>
+                                    {filtered.map(emp => (
+                                        <tr key={emp.employee_id}>
+                                            <td className="col-id">{emp.employee_id}</td>
+                                            <td>
+                                                <div className="user-cell">
+                                                    <div className="table-avatar">
+                                                        {emp.full_name.substring(0, 2).toUpperCase()}
+                                                    </div>
+                                                    <div>
+                                                        <div className="col-primary">{emp.full_name}</div>
+                                                        <div className="col-secondary">{emp.email}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><span className="badge badge-neutral">{emp.department}</span></td>
+                                            <td>
+                                                <span style={{ fontSize: '0.875rem', fontWeight: 500, color: '#059669' }}>
+                                                    {emp.attendance_records?.filter(a => a.status === 'Present').length || 0} Days
+                                                </span>
+                                            </td>
+                                            <td style={{ textAlign: 'center' }}>
+                                                <button className="btn-icon" onClick={() => handleDelete(emp.employee_id)} title="Delete">
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {filtered.length === 0 && (
+                                        <tr><td colSpan="5" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-tertiary)' }}>No records found.</td></tr>
+                                    )}
+                                </>
                             )}
                         </tbody>
                     </table>

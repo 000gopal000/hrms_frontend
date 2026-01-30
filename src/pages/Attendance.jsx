@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../api';
 import { Filter, Check, X } from 'lucide-react';
 import toast from 'react-hot-toast';
+import TableLoader from '../components/TableLoader';
 
 const Attendance = () => {
     const [employees, setEmployees] = useState([]);
@@ -9,17 +10,26 @@ const Attendance = () => {
     const [filtered, setFiltered] = useState([]);
     const [dateFilter, setDateFilter] = useState('');
     const [empFilter, setEmpFilter] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
 
     const [selectedEmp, setSelectedEmp] = useState('');
     const [markDate, setMarkDate] = useState(new Date().toISOString().split('T')[0]);
 
     useEffect(() => {
         const load = async () => {
-            const [eRes, aRes] = await Promise.all([api.get('/employees/'), api.get('/attendance/')]);
-            setEmployees(eRes.data);
-            const sorted = aRes.data.sort((a, b) => new Date(b.date) - new Date(a.date));
-            setAttendance(sorted);
-            setFiltered(sorted);
+            try {
+                setIsLoading(true);
+                const [eRes, aRes] = await Promise.all([api.get('/employees/'), api.get('/attendance/')]);
+                setEmployees(eRes.data);
+                const sorted = aRes.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+                setAttendance(sorted);
+                setFiltered(sorted);
+            } catch (error) {
+                console.error(error);
+                toast.error("Failed to load data");
+            } finally {
+                setIsLoading(false);
+            }
         };
         load();
     }, []);
@@ -108,19 +118,25 @@ const Attendance = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {filtered.map(r => (
-                                <tr key={r.id}>
-                                    <td style={{ fontFamily: 'var(--font-mono)' }}>{r.date}</td>
-                                    <td style={{ fontWeight: 500 }}>{getEmpName(r.employee)}</td>
-                                    <td>
-                                        <span className={`badge ${r.status === 'Present' ? 'badge-success' : 'badge-danger'}`}>
-                                            <span className="badge-dot" /> {r.status}
-                                        </span>
-                                    </td>
-                                </tr>
-                            ))}
-                            {filtered.length === 0 && (
-                                <tr><td colSpan="3" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-tertiary)' }}>No logs found.</td></tr>
+                            {isLoading ? (
+                                <TableLoader columns={3} />
+                            ) : (
+                                <>
+                                    {filtered.map(r => (
+                                        <tr key={r.id}>
+                                            <td style={{ fontFamily: 'var(--font-mono)' }}>{r.date}</td>
+                                            <td style={{ fontWeight: 500 }}>{getEmpName(r.employee)}</td>
+                                            <td>
+                                                <span className={`badge ${r.status === 'Present' ? 'badge-success' : 'badge-danger'}`}>
+                                                    <span className="badge-dot" /> {r.status}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {filtered.length === 0 && (
+                                        <tr><td colSpan="3" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-tertiary)' }}>No logs found.</td></tr>
+                                    )}
+                                </>
                             )}
                         </tbody>
                     </table>
