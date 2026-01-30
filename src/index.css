@@ -32,7 +32,6 @@ body {
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;
-  zoom: 0.9;
 }
 
 .container {
